@@ -16,16 +16,12 @@ function Game(canvas) {
     this.context    =   this.canvas.getContext('2d');
     this.actionLoopBusy = false;
     this.drowLoop = function () {
-        this.context.clearRect(this.gameZone.x1,this.gameZone.y1,this.gameZone.width,this.gameZone.height);
+        this.context.clearRect(
+            this.gameZone.x1 - this.gameZone.blockSize,
+            this.gameZone.y1 - this.gameZone.blockSize,
+            this.gameZone.width + 2 * this.gameZone.blockSize,
+            this.gameZone.height + 2 * this.gameZone.blockSize);
         this.context.strokeRect(this.gameZone.x1,this.gameZone.y1,this.gameZone.width,this.gameZone.height);
-        // var x = this.gameZone.x1;
-        // while ( x < this.gameZone.x2 ) {
-        //     this.context.beginPath();
-        //     this.context.moveTo(x,this.gameZone.y1);
-        //     this.context.lineTo(x,this.gameZone.y2);
-        //     x +=  this.gameZone.blockSize;
-        //     this.context.stroke();
-        // }
         this.platform.drow();
         this.ball.drow();
         if(!this.active) {
@@ -46,14 +42,16 @@ function Game(canvas) {
         this.context.clearRect(0,0,this.canvas.width,this.canvas.height);
         this.platform   = new Platform(this.gameZone,14,this.context);
         this.ball       = new Ball(this.gameZone,this.context);
-        this.animationLoop = setInterval(this.drowLoop.bind(this),5);
+        this.animationLoop = setInterval(this.drowLoop.bind(this),1);
         this.gameSpeed = 10;
         this.ready = true;
     };
 
     this.showMessage = function (text) {
         this.context.font = "30px Arial";
-        this.context.fillText(text,this.gameZone.x1 +this.gameZone.width/2 - 100,this.gameZone.y1 + this.gameZone.height/2);
+        this.context.textAlign="center";
+        this.context.fillText(text,this.gameZone.x1 + this.gameZone.width/2,
+            this.gameZone.y1 + this.gameZone.height/2);
     };
 
     this.build();

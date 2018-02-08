@@ -10,7 +10,6 @@ function Platform(gameZone, length, context) {
     this.drow = function () {
         context.fillRect(this.x, this.y, this.width, this.heigth);
     };
-    this.actionTimestamp = new Date().getTime();
     this.moveLeft = function (step) {
         if(step !== undefined) {
             this.x -= step;
@@ -35,7 +34,6 @@ function Platform(gameZone, length, context) {
              this.vector.x = 0
          }
          this.lastX = this.x;
-         console.log(this.vector);
     };
 
     this.loop = setInterval(this.checkAction.bind(this),80);
