@@ -1,27 +1,26 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>ARKANOID</title>
-    <script src="ball.js"></script>
-    <script src="platform.js"></script>
-    <script src="game.js"></script>
-</head>
-<body>
-    <div id="game_container">
-        <canvas id="game" style="background: cadetblue"></canvas>
-    </div>
-    <div id="controls">
-        <button id="left_control">LEFT</button>
-        <button id="right_control">RIGHT</button>
-    </div>
-    <div >
-        <button id="start_control">START</button>
-        <button id="stop_control">STOP</button>
-    </div>
-    <div id="help">
-
-    </div>
-    <script src="main.js"></script>
-</body>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>ARKANOID</title>
+        <script src="bower_components/victor/build/victor.min.js"></script>
+        <script src="js/ball.js"></script>
+        <script src="js/platform.js"></script>
+        <script src="js/game.js"></script>
+        <style>
+            html,body,#game_container {
+                width: 100%;
+                height: 100%;
+                padding: 0;
+                margin: 0;
+                overflow: hidden;
+            }
+        </style>
+    </head>
+    <body style="">
+        <div id="game_container">
+            <canvas id="game" style="background: #f8fffd" ></canvas>
+        </div>
+        <script src="js/main.js"></script>
+    </body>
 </html>
