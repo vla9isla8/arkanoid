@@ -1,0 +1,20 @@
+{
+  "name": "arkanoid",
+  "homepage": "https://github.com/vla9isla8/arkanoid",
+  "authors": [
+    "vla9isla8"
+  ],
+  "description": "",
+  "main": "index.html",
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "victor": "^1.1.0"
+  }
+}
