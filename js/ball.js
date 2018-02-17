@@ -32,8 +32,8 @@ function Ball(gameZone, context) {
     };
     this.touchBottom = function(vector) {
         this.vector.invertY();
-        this.vector.add(vector);
-        console.log(this.vector.verticalAngleDeg());
+        if(vector)
+            this.vector.add(vector);
     };
     this.moveLeft = function (step) {
         if(step !== undefined) {
@@ -49,5 +49,19 @@ function Ball(gameZone, context) {
             this.x += this.size;
         }
     };
+
+    this.getX1 = function () {
+        return this.x;
+    };
+    this.getX2 = function () {
+        return this.x + this.size;
+    };
+    this.getY1 = function () {
+        return this.y;
+    };
+    this.getY2 = function () {
+        return this.y + this.size;
+    }
+
 
 }

@@ -4,17 +4,33 @@ function GameZone(canvas) {
     this.height         =  100 * this.blockSize;
     this.paddingWidth    = canvas.width - this.width;
     this.paddingHeight   = canvas.height - this.height;
-    this.x1 =   this.paddingWidth/2;
-    this.x2 =   this.width + this.x1;
-    this.y1 =   this.paddingHeight/2;
-    this.y2 =   this.height + this.y1;
+    this.x2 =   canvas.width - this.paddingWidth/2;
+    this.x1 =   this.x2 - this.width;
+    this.y2 =   canvas.height - this.paddingHeight/2;
+    this.y1 =   this.y2 - this.height;
+    this.blockZone  = {
+        x1: this.x1 + this.blockSize * 4,
+        x2: this.x1 + this.blockSize * 42,
+        y1: this.y1 + this.blockSize * 4,
+        y2: this.y1 + this.blockSize * 18
+    }
 }
+function getRandom(start,end){
+    return Math.round(Math.random() * ( end - start) + start);
+}
+function getRandom(end){
+    return getRandom(0,end);
+}
+
 function Game(canvas) {
     this.active     =   false;
     this.canvas     =   canvas;
     this.gameZone    =   new GameZone(canvas);
     this.context    =   this.canvas.getContext('2d');
     this.actionLoopBusy = false;
+    this.blockArray = [];
+    this.score = new ObservableCounter(0);
+
     this.drowLoop = function () {
         this.context.clearRect(
             this.gameZone.x1 - this.gameZone.blockSize,
@@ -24,9 +40,20 @@ function Game(canvas) {
         this.context.strokeRect(this.gameZone.x1,this.gameZone.y1,this.gameZone.width,this.gameZone.height);
         this.platform.drow();
         this.ball.drow();
+            for (var i in this.blockArray) {
+                for (var j in  this.blockArray[i]) {
+                    this.blockArray[i][j].drow();
+                }
+            }
+
         if(!this.active) {
             this.showMessage("CLICK TO START");
         }
+    };
+
+    this.onScoreChange = function (callback) {
+        this.scoreObserver = callback;
+        this.score.onChange(this.scoreObserver);
     };
 
     this.build = function () {
@@ -39,9 +66,36 @@ function Game(canvas) {
         }
         delete this.platform;
         delete this.ball;
+        delete this.score;
+        this.score = new ObservableCounter(0);
+        if(this.scoreObserver) {
+            this.score.onChange(this.scoreObserver);
+            this.scoreObserver.call(this.score,0);
+        }
         this.context.clearRect(0,0,this.canvas.width,this.canvas.height);
         this.platform   = new Platform(this.gameZone,14,this.context);
         this.ball       = new Ball(this.gameZone,this.context);
+        delete this.blockArray;
+        this.blockArray = [];
+
+        var startY = this.gameZone.blockZone.y1;
+
+        for(var i = 0;i<=8;i++) {
+            var startX = this.gameZone.blockZone.x1;
+            var line = [];
+            for(var j = 0;j<=20;j++) {
+                line.push(new Block(
+                    this.gameZone,
+                    this.context,
+                    startX + this.gameZone.blockSize * j,
+                    startY + this.gameZone.blockSize * i
+                ));
+                startX += this.gameZone.blockSize;
+            }
+            startY += this.gameZone.blockSize;
+            this.blockArray.push(line);
+        }
+
         this.animationLoop = setInterval(this.drowLoop.bind(this),1);
         this.gameSpeed = 10;
         this.ready = true;
@@ -54,7 +108,6 @@ function Game(canvas) {
             this.gameZone.y1 + this.gameZone.height/2);
     };
 
-    this.build();
     this.start  =   function () {
         while (this.actionLoopBusy) {}
         this.actionLoopBusy = true;
@@ -117,6 +170,26 @@ function Game(canvas) {
             && ((this.ball.x + this.ball.size) <= (this.platform.x + this.platform.width) )) {
                 this.ball.touchBottom(this.platform.vector);
         }
+
+
+
+        if( this.ball.getY1() <= this.blockArray[this.blockArray.length - 1][0].getY2() ) {
+            mainLoop: for (var i = 0; i < this.blockArray.length; i++) {
+                var line = this.blockArray[i];
+                for (var j = 0; j < line.length; j++) {
+                    var block = line[j];
+                    if (block && block.test(this.ball)) {
+                        this.score.increment();
+                        line.splice(j, 1);
+                        if (line.length === 0) {
+                            this.blockArray.splice(i, 1);
+                        }
+                        break mainLoop;
+                    }
+                }
+            }
+        }
+
         this.ball.step();
     };
 

@@ -1,11 +1,17 @@
 var root            =   document.getElementById("game_container");
 var canvas          =   document.getElementById("game");
+var score           =   document.getElementById("score");
 canvas.width        =   root.clientWidth;
 canvas.height       =   root.clientHeight;
 var game            =   new Game(canvas);
+game.onScoreChange(function (val) {
+    score.innerText = "Score: " + val;
+});
+game.build();
 var lastX = 0;
 canvas.addEventListener('mousemove', function (event) {
-    lastX = Math.abs(event.pageX - lastX) < 5 ? lastX : event.pageX;
+    var pageX = event.pageX - score.clientWidth;
+    lastX = Math.abs(pageX - lastX) < 5 ? lastX : pageX;
 },false);
 
 canvas.onclick      =   function () {
