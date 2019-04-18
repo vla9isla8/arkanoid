@@ -31,6 +31,11 @@ function Game(canvas) {
     this.blockArray = [];
     this.score = new ObservableCounter(0);
 
+    this.animate = function () {
+        requestAnimationFrame(this.animate.bind(this));
+        this.drowLoop();
+    };
+
     this.drowLoop = function () {
         this.context.clearRect(
             this.gameZone.x1 - this.gameZone.blockSize,
@@ -57,10 +62,6 @@ function Game(canvas) {
     };
 
     this.build = function () {
-        if ( this.animationLoop ) {
-            clearTimeout(this.animationLoop);
-            delete this.animationLoop;
-        }
         if(this.platform) {
             this.platform.stop();
         }
@@ -95,10 +96,9 @@ function Game(canvas) {
             startY += this.gameZone.blockSize;
             this.blockArray.push(line);
         }
-
-        this.animationLoop = setInterval(this.drowLoop.bind(this),1);
         this.gameSpeed = 10;
         this.ready = true;
+        this.animate();
     };
 
     this.showMessage = function (text) {
@@ -149,10 +149,6 @@ function Game(canvas) {
             if ( this.actionLoop ) {
                 clearTimeout(this.actionLoop);
                 delete this.actionLoop;
-            }
-            if ( this.animationLoop ) {
-                clearTimeout(this.animationLoop);
-                delete this.animationLoop;
             }
             this.active     =   false;
             this.showMessage("GAME OVER");
@@ -222,5 +218,4 @@ function Game(canvas) {
         }
         this.platform.moveRight(step);
     };
-
 }

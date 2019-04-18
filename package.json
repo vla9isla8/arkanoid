@@ -1,0 +1,29 @@
+{
+  "name": "arkanoid",
+  "version": "1.0.0",
+  "description": "Html 5 Game test",
+  "main": "index.html",
+  "scripts": {
+    "start": "npm run lite",
+    "lite": "lite-server start",
+    "postinstall": "bower install"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/vla9isla8/arkanoid.git"
+  },
+  "keywords": [
+    "html5",
+    "js",
+    "vanilajs"
+  ],
+  "author": "vla9isla8",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/vla9isla8/arkanoid/issues"
+  },
+  "homepage": "https://github.com/vla9isla8/arkanoid#readme",
+  "devDependencies": {
+    "lite-server": "^2.4.0"
+  }
+}
